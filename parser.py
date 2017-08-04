@@ -4,6 +4,7 @@ class ParseError(Exception): None
 
 Star = namedtuple('Star', 'inner')
 Bar  = namedtuple('Bar', ['left', 'right'])
+class Dot: None
 
 def parse(text):
 	def eof():
@@ -88,6 +89,9 @@ def parse(text):
 			elif token == '|':
 				parsed = Bar(parsed, expression(subexpression = subexpression))
 				break
+
+			elif token == '.':
+				parsed.append(Dot())
 
 			else:
 				append_char(token)

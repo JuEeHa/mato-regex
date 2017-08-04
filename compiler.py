@@ -2,6 +2,7 @@ from collections import namedtuple
 import parser
 
 Match = namedtuple('Match', ['text', 'end'])
+Any = namedtuple('Any', 'end')
 
 class Split:
 	def __init__(self, first, second):
@@ -46,6 +47,12 @@ def compile_parsed(parsed):
 			inner = fragment(parsed.inner, end = split)
 			split.second = inner
 			return split
+
+		elif type(parsed) == parser.Dot:
+			return Any(end = end)
+
+		else:
+			assert False # unreanchable
 
 	return fragment(parsed, end = None)
 

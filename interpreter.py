@@ -28,7 +28,7 @@ def run_vm(ir, text):
 					new_threads.append(Thread(thread.instruction.first))
 					new_threads.append(Thread(thread.instruction.second))
 
-				elif type(thread.instruction) == compiler.Match:
+				elif type(thread.instruction) == compiler.Match or type(thread.instruction) == compiler.Any:
 					# Setting register value to 0 means we're matching against the first character and blocking on input
 					new_threads.append(Thread(thread.instruction, register = 0))
 
@@ -47,17 +47,22 @@ def run_vm(ir, text):
 			# Only bother to run threads if there is text to match against
 			if index < len(text):
 				for thread in threads:
-					assert type(thread.instruction) == compiler.Match
+					if type(thread.instruction) == compiler.Match:
+						# Match character against input
+						# If it matches, add to the new threads and update register / instruction
+						# Otherwise, drop the thread
+						if thread.instruction.text[thread.register] == text[index]:
+							if thread.register + 1 < len(thread.instruction.text):
+								# We'll still be inside this match instruction, update register
+								new_threads.append(Thread(thread.instruction, register = thread.register + 1))
+							else:
+								# We'll move to the next instruction, update instruction
+								new_threads.append(Thread(thread.instruction.end))
 
-					# If it matches, add to the new threads and update register / instruction
-					# Otherwise, drop the thread
-					if thread.instruction.text[thread.register] == text[index]:
-						if thread.register + 1 < len(thread.instruction.text):
-							# We'll still be inside this match instruction, update register
-							new_threads.append(Thread(thread.instruction, register = thread.register + 1))
-						else:
-							# We'll move to the next instruction, update instruction
-							new_threads.append(Thread(thread.instruction.end))
+					elif type(thread.instruction) == compiler.Any:
+						# Always succeed (assuming there's input, naturally)
+						# Add next instruction to the new threads
+						new_threads.append(Thread(thread.instruction.end))
 
 				index += 1
 

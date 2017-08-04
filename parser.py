@@ -5,6 +5,8 @@ class ParseError(Exception): None
 Star = namedtuple('Star', 'inner')
 Bar  = namedtuple('Bar', ['left', 'right'])
 class Dot: None
+class Caret: None
+class Dollar: None
 
 def parse(text):
 	def eof():
@@ -92,6 +94,12 @@ def parse(text):
 
 			elif token == '.':
 				parsed.append(Dot())
+
+			elif token == '^':
+				parsed.append(Caret())
+
+			elif token == '$':
+				parsed.append(Dollar())
 
 			else:
 				append_char(token)

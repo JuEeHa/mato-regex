@@ -3,6 +3,8 @@ import parser
 
 Match = namedtuple('Match', ['text', 'end'])
 Any = namedtuple('Any', 'end')
+Beginning = namedtuple('Beginning', 'end')
+End = namedtuple('End', 'end')
 
 class Split:
 	def __init__(self, first, second):
@@ -50,6 +52,12 @@ def compile_parsed(parsed):
 
 		elif type(parsed) == parser.Dot:
 			return Any(end = end)
+
+		elif type(parsed) == parser.Caret:
+			return Beginning(end = end)
+
+		elif type(parsed) == parser.Dollar:
+			return End(end = end)
 
 		else:
 			assert False # unreanchable

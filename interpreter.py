@@ -24,6 +24,14 @@ def run_vm(ir, text):
 					if not index < len(text):
 						return True
 
+				elif type(thread.instruction) == compiler.Beginning:
+					if index == 0:
+						new_threads.append(Thread(thread.instruction.end))
+
+				elif type(thread.instruction) == compiler.End:
+					if index == len(text):
+						new_threads.append(Thread(thread.instruction.end))
+
 				elif type(thread.instruction) == compiler.Split:
 					new_threads.append(Thread(thread.instruction.first))
 					new_threads.append(Thread(thread.instruction.second))

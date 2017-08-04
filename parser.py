@@ -2,7 +2,6 @@ from collections import namedtuple
 
 class ParseError(Exception): None
 
-Text = namedtuple('Text', 'text')
 Star = namedtuple('Star', 'inner')
 Bar  = namedtuple('Bar', 'left right')
 
@@ -44,11 +43,11 @@ def parse(text):
 
 			element = pop_parsed()
 
-			# Since longer strings are combined into one Text object, we have to take apart Text objects longer than one
-			# In case of (foo) this won't take it apart since that'll be [Text(foo)], not just Text(foo)
-			if type(element) == Text and len(element.text) > 1:
-				parsed.append(Text(element.text[:-1]))
-				element = Text(element.text[-1])
+			# Since longer strings are combined into one string object, we have to take apart strings longer than one
+			# In case of (foo) this won't take it apart since that'll be ['foo'], not just 'foo'
+			if type(element) == str and len(element) > 1:
+				parsed.append(element[:-1])
+				element = element[-1]
 
 			return element
 
@@ -61,11 +60,11 @@ def parse(text):
 			else:
 				char = token
 
-			if len(parsed) > 0 and type(parsed[-1]) == Text:
-				previous = pop_parsed().text
-				parsed.append(Text(previous + char))
+			if len(parsed) > 0 and type(parsed[-1]) == str:
+				previous = pop_parsed()
+				parsed.append(previous + char)
 			else:
-				parsed.append(Text(char))
+				parsed.append(char)
 
 		parsed = []
 		while True:

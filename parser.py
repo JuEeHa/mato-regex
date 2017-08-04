@@ -29,14 +29,6 @@ def parse(text):
 
 		return token
 
-	def peek_token():
-		nonlocal text, length, index
-
-		if eof():
-			raise ParseError('Unexpected end of text')
-
-		return text[index]
-
 	def expression(*, subexpression = True):
 		nonlocal length, index
 

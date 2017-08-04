@@ -71,5 +71,8 @@ def run_vm(ir, text):
 	# We didn't get a match
 	return False
 
-def match(regex, text):
+def match_entire(regex, text):
 	return run_vm(compiler.compile(regex), text)
+
+def match_subsection(regex, text):
+	return run_vm(compiler.compile('.*' + regex + '.*'), text)

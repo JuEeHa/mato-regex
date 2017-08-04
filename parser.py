@@ -3,7 +3,7 @@ from collections import namedtuple
 class ParseError(Exception): None
 
 Star = namedtuple('Star', 'inner')
-Bar  = namedtuple('Bar', 'left right')
+Bar  = namedtuple('Bar', ['left', 'right'])
 
 def parse(text):
 	def eof():
